@@ -1,5 +1,7 @@
 import React from 'react';
-import Axios from 'axios'
+import fetch from 'node-fetch';
+import io from 'socket.io-client';
+
 export class Card extends React.Component {
     constructor(props) {
         super(props)
@@ -9,18 +11,50 @@ export class Card extends React.Component {
                     torrentId: ''
                 }
             ],
-            status: 'Download'
+            progressBar: 0,
+            status: 'Download',
+            vuzeId: 0,
+            socket: null,
+            title: '',
+            onPlex: false
         }
     }
 
-    downloadMovie = (link) => {
-        link = btoa(link)
-        fetch('http://173.28.18.61:9000/torrent/download/'+link)
-        .then(resp => {
-            console.log(resp.json())
-        }).then((data) => {
-            console.log(data);
-        });
+    componentDidMount() {
+        this.setState({onPlex: this.props.onPlex})
+        const socket = io('http://173.28.18.61:9000')
+        this.setState({socket: socket})
+        socket.on('allTorrentStaus', (res) => {
+            // this.setState({ status: 'Downloading'})                              //For unusually movie names
+            if (res != undefined) {
+                res.status.forEach(element => {   
+                    element.name = element.name.toUpperCase();
+                    const upperCaseTitleProps = this.props.title.toUpperCase();  
+                    if (element.name.includes(upperCaseTitleProps) ) {  
+                        console.log('Movie Name matched! '+element)               //Found the movie-card  //IMPROV: If the download is done change the status to - on plex
+                         this.setState({    
+                              status: 'Downloading',
+                              progressBar: element.percentDone
+                            });
+                            console.log(this.state.progressBar+ ' prograss baaar')
+                            if(this.state.progressBar >= 97.9) { 
+                                console.log('Movie Downloaded')
+                                this.setState({onPlex: true})
+                                socket.emit('refreshPlex');
+                             }       
+                        }
+                });
+            }
+        })
+    }
+
+
+    downloadMovie = (magnet) => {
+        const movieItem = {
+            title: this.props.heading,
+            magnet: magnet
+        }
+        this.state.socket.emit('startDownload', movieItem)
     }
 
     render() {
@@ -32,11 +66,9 @@ export class Card extends React.Component {
         }
 
         var torrent = ""
-        console.log(torrent)
         this.props.torrent.map((element) => {
             if(element.quality === '1080p'){
                 torrent = element.url
-                console.log('clicked!')
                 return 
             } 
             torrent = element.url
@@ -59,10 +91,10 @@ export class Card extends React.Component {
                     <p style={{height: 40, overflow: 'scroll'}}><strong>Genre: </strong> { genre }</p>
                 </div>
                 <div className="card-action">
-        <a className="waves-effect waves-light btn-small" target="_blank" href={this.props.onPlex ? 'http://app.plex.tv':null} onClick={this.props.onPlex ? null:() => {this.downloadMovie(torrent)}}><i className="material-icons right">{this.props.onPlex ? null:'cloud_download'}</i>{this.props.onPlex ? 'On Plex':'Download'}</a>
+        <a className="waves-effect waves-light btn-small" target="_blank" href={this.state.onPlex ? 'http://app.plex.tv':null} onClick={this.state.onPlex ? null:() => {this.downloadMovie(torrent)}}><i className="material-icons right">{this.state.onPlex ? null:'cloud_download'}</i>{this.state.onPlex ? 'On Plex':this.state.status}</a>
                 </div>
                 <div className="progress">
-                    <div className="determinate" style={{width: 0}}></div>
+                    <div className="determinate" style={{width: this.state.onPlex ? '100%':this.state.progressBar+'%'}}></div>
                 </div>
                 </div>
             </div>

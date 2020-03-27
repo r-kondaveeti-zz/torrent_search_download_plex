@@ -11,14 +11,19 @@
     "chai": "^4.2.0",
     "child_process": "^1.0.2",
     "cors": "^2.8.5",
+    "events": "^3.1.0",
     "express": "^4.17.1",
+    "http": "0.0.1-security",
     "http-proxy": "^1.18.0",
     "mocha": "^7.1.1",
     "mongodb": "^3.5.5",
     "node-fetch": "^2.6.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-scripts": "3.3.1"
+    "react-scripts": "3.3.1",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "xml2js": "^0.4.23"
   },
   "scripts": {
     "start": "react-scripts start",

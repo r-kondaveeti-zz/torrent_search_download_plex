@@ -10,23 +10,28 @@ export class Main extends React.Component {
         this.state = {
             movies: [],
             loader: true,
-            query : ''
+            query : '',
+            onPlex: false
         }
         this.movies('')
     }
 
     movies = (movieName) => {
         this.state.loader = false
-        var query = 'http://173.28.18.61:9000/'+encodeURIComponent(movieName)
-        if (movieName === '') { query = 'http://173.28.18.61:9000/search' }
+        var query = 'http://173.28.18.61:9000/search/'+encodeURIComponent(movieName)
+        if (movieName === '') { query = 'http://173.28.18.61:9000/search/empty' }
         Axios.get(query)
         .then(
             resp => {
-                this.setState({
-                    movies: resp.data
-                })
                 console.log(resp)
-                if (this.state.movies === undefined) { this.setState({loader: true}) }
+                if (resp.data.name === 'diot') {}                         // <----- Means the entered query is invalid  as it has no output from Yify
+                else { 
+                    this.setState({
+                        movies: resp.data
+                    })
+                    console.log(resp)
+                    if (this.state.movies === undefined) { this.setState({loader: true}) }
+                }
             }
         )
 
@@ -44,7 +49,6 @@ export class Main extends React.Component {
           this.onSubmit();
         }
       }
-
     onChange = (event) => {
         this.setState({query: event.target.value})
         // this.movies(event.target.value)
@@ -71,8 +75,9 @@ export class Main extends React.Component {
 
         if(this.state.movies !== undefined ) {
             searchedMovies = this.state.movies.map((element)=> {
-                this.state.loader = true
-                return(<Card rating={element.rating} onPlex={element.onPlex} genre={element.genres} torrent={element.torrents}language={element.language} synopsis={element.synopsis} title={element.title} image={element.large_cover_image} heading={element.title} year={element.year}/>)
+                this.state.loader = true                                //IMPROV: <---- Not a good practice
+                this.state.onPlex = element.onPlex                     //IMPROV: <---- Not a good practice
+                return(<Card key={Math.random()} rating={element.rating} onPlex={this.state.onPlex} genre={element.genres} torrent={element.torrents}language={element.language} synopsis={element.synopsis} title={element.title} image={element.large_cover_image} heading={element.title} year={element.year}/>)
             })
             if (searchedMovies === '') this.state.loader = false
         }
