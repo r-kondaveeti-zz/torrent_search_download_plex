@@ -24,7 +24,9 @@ export class Main extends React.Component {
         .then(
             resp => {
                 console.log(resp)
-                if (resp.data.name === 'diot') {}                         // <----- Means the entered query is invalid  as it has no output from Yify
+                if (resp.data.name === 'diot') {
+                    alert('Movie not available. Please check the spelling and try again!')
+                }                         // <----- Means the entered query is invalid  as it has no output from Yify
                 else { 
                     this.setState({
                         movies: resp.data
