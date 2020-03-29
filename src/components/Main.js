@@ -1,5 +1,7 @@
 import React from 'react';
 import Axios from 'axios';
+import M from 'materialize-css'
+
 
 import { Card } from './Card';
 
@@ -14,6 +16,13 @@ export class Main extends React.Component {
             onPlex: false
         }
         this.movies('')
+    }
+
+    componentDidMount() {
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.sidenav');
+            var instances = M.Sidenav.init(elems, {});
+          });
     }
 
     movies = (movieName) => {
@@ -86,8 +95,8 @@ export class Main extends React.Component {
 
         return(
         <div>
-            <nav>
-                <div className="nav-wrapper">
+            {/* <nav> */}
+                {/* <div className="nav-wrapper">
                     <form onSubmit={this.onSubmit} >
                         <div className="input-field teal lighten-2">
                         <input id="search" type="search" onKeyDown={this.onKeyDown} placeholder="Search movies" style={{'fontStyle': 'oblique', 'fontWeight': 'normal'}} onChange={this.onChange} required />
@@ -97,7 +106,30 @@ export class Main extends React.Component {
                     </form>
                         { this.didLoad(this.state.loader) }
                 </div>
+            </nav> */}
+         <div className="navbar-fixed">
+            <nav className="white">
+                <div class="nav-wrapper">
+                    <a href="#!" class="brand-logo"></a>
+                    <a href="#" data-target="mobile-demo" class="sidenav-trigger right teal-text"><i class="material-icons">menu</i></a>
+                    <ul class="right hide-on-med-and-down teal-text">                  
+                        <li><a href="sass.html" className="teal-text"><b>Home</b></a></li>
+                        <li><a href="badges.html" className="teal-text"><b>English Movies</b></a></li>
+                        <li><a href="collapsible.html" className="teal-text"><b>Telugu Movies</b></a></li>
+                        <li><a href="mobile.html" className="teal-text"><b>Hindi Movies</b></a></li>
+                        <li><a href="mobile.html" className="teal-text"><b>Recent Downloads</b></a></li>
+                    </ul>
+                    { this.didLoad(this.state.loader) }
+                </div>
             </nav>
+          </div>
+          <ul class="sidenav teal-text" id="mobile-demo">
+            <li><a href="sass.html" className="teal-text"><b>Home</b></a></li>
+            <li><a href="badges.html"className="teal-text"><b>English Movies</b></a></li>
+            <li><a href="collapsible.html" className="teal-text"><b>Telugu Movies</b></a></li>
+            <li><a href="mobile.html" className="teal-text"><b>Hindi Movies</b></a></li>
+            <li><a href="mobile.html" className="teal-text"><b>Recent Downloads</b></a></li>
+          </ul> 
             <br/>
             <div className="container">
                 <div className="row">
