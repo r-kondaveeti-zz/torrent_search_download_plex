@@ -59,8 +59,8 @@ export class Main extends React.Component {
     didLoad(didItLoad) {
         if(didItLoad) {
             return (
-                <div class="progress">
-                     <div class="determinate" style={{width: '100%'}}></div>
+                <div>
+                     {/* <div class="determinate" style={{width: '100%'}}></div> */}
                 </div>
             )
         }

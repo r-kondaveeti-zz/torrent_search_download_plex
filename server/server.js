@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
     socket.on('all-torrent-status', res => {
         console.log(res)
         res.status.forEach(element => {
-            if (element.percentDone > 98.0) {
+            if (element.percentDone > 99.0) {
                 http.get('http://173.28.18.61:32400/library/sections/5/refresh?force=1&X-Plex-Token=rSGQyH4Q1ZxJNs-u9jf3', () => {
                 console.log('Refreshed plex movie library')
                 })
@@ -115,12 +115,14 @@ io.on('connection', (socket) => {
     
     //Dependencies - id of the movie. Can be obtained by querying Vuze (query can 
     //look up if the movies is being downloaded (status 4 and First 5 letters has to match the name))
-    // socket.on('stopDownload', name => {
-    //     socket.emit('stop-download', 3)
-    //     socket.on('stopped-download', res => {
-    //         console.log('download has stopped! Informing the client')
-    //     })
-    // })
+    socket.on('stopDownload', id => {
+        io.emit('stop-download', id)
+        console.log('sending stop signal to Ninja '+id)
+    })
+    socket.on('stopped-download', res => {
+        console.log('download has stopped! Informing the client '+res)
+        socket.broadcast.emit('stoppedDownload', res)
+    })
 })
 
 const queryPlex = async (yifyMovies, response, callback) => {
