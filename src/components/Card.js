@@ -97,18 +97,28 @@ export class Card extends React.Component {
             })
         }
 
-        var torrent = ""
-        this.props.torrent.map((element) => {
-            if(element.quality === '1080p'){
-                torrent = element.url
-                return 
-            } 
-            torrent = element.url
-            return 
-        })
+        if (this.props.torrent !== undefined) {
+            var torrent = " "
+            if(typeof this.props.torrent === typeof []) {     //Making sure torrents property of json is array
+                // console.log('Torrents are an array ')
+                    this.props.torrent.map((element) => {
+                    if(element.quality === '1080p'){
+                        torrent = element.url
+                        return 
+                    } 
+                    torrent = element.url
+                    return 
+                })
+            }
+    
+            if(typeof this.props.torrent === typeof 'string') {    //Desi movies have only 1 torrent link, which has to be strings
+                torrent = this.props.torrent;
+            }
+        }
+        
         
         return(
-            <div className="col s12 m4 l4 ">
+            <div className="col s6 m4 l4 ">
                 <div className="card">
                 <div className="card-image">
                     <img src={ this.props.image } alt={this.props.title}/>
@@ -123,7 +133,7 @@ export class Card extends React.Component {
                     <p style={{height: 40, overflow: 'scroll'}}><strong>Genre: </strong> { genre }</p>
                 </div>
                 <div className="card-action">
-        <a className={this.state.buttonEffect} target="_blank" href={this.state.onPlex ? 'http://app.plex.tv':null} onClick={this.state.onPlex ? null:() => {this.downloadMovie(torrent)}}><i className="material-icons right">{this.state.onPlex ? null:'cloud_download'}</i>{this.state.onPlex ? 'On Plex':this.state.status}</a><span class="badge">{ this.state.onPlex ? null:<strong>{this.state.speed+' '+this.state.eta}</strong> }</span>
+        <a class={this.state.buttonEffect} target="_blank" href={this.state.onPlex ? 'http://app.plex.tv':null} onClick={this.state.onPlex ? null:() => {this.downloadMovie(torrent)}}><i className="material-icons right">{this.state.onPlex ? null:'cloud_download'}</i>{this.state.onPlex ? 'On Plex':this.state.status}</a><span class="badge">{ this.state.onPlex ? null:<strong>{this.state.speed+' '+this.state.eta}</strong> }</span>
         {/* <br/>
         <br/> */}
                 </div>

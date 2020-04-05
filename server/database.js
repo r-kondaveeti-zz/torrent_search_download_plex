@@ -38,10 +38,10 @@ findElements = (db, movie) => {
   })
 }
 
-findAllMovies = (db) => {
+findAllMovies = (db, collection) => {
   return new Promise((resolve, reject) => {
     let dbo = db.db('movie-downloader');
-      dbo.collection('movies').find({}).toArray((err, result) => {
+      dbo.collection(collection).find({}).toArray((err, result) => {
         if (err) throw err;
         resolve(result)
         db.close();
@@ -58,8 +58,9 @@ findAllMovies = (db) => {
 
 module.exports = {
     makeConnection,
-    insertIntoCollection,
-    findElements,
+    // insertIntoCollection,
+    // findElements,
+    findAllMovies
 }
 
 
