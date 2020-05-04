@@ -8,7 +8,11 @@ Installs the dependencies
 
 ### `npm start`
 
-Starts the server on port 3000
+Starts the front-end server on port 3000
+
+### `node server/server.js`
+
+Starts the back-end server on port 9000 (default)
 
 ## Disclaimer
 
