@@ -171,7 +171,7 @@ const queryPlex = async (yifyMovies, response, callback) => {
         let returnMovies= []
         let plexMovies = []
         var data = '';
-        http.get('http://173.28.18.61:32400/library/sections/5/all?X-Plex-Token=rSGQyH4Q1ZxJNs-u9jf3', function(res) {
+        http.get('http://173.28.18.61:32400/library/sections/5/all?X-Plex-Token={<PlexToken>}', function(res) {
             if (res.statusCode >= 200 && res.statusCode < 400) {
                 res.on('data', function(data_) { data += data_.toString(); });
                 res.on('end', function() {
